@@ -17,12 +17,13 @@ git init
 touch README.md
 git add .
 git commit -m "Initial commit with files"
+git branch -M main
 ```
 Go to GitHub and create a new repository. Don’t initialize it with a README or any other files if you’re pushing an existing project.
 
 ```
 git remote add origin https://github.com/ckhead/Grimoire.git
-git push -u origin master
+git push -u origin main
 ```
 ### updating commands once you have the repository set up
 make sure you have the latest version on your local 
