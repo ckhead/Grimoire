@@ -39,6 +39,12 @@ git commit -m "revise draft of the paper"
 
 git push
 ```
+| Command        | What It Does |
+|---------------|-------------|
+| `git add -A`  | Stages all changes (new, modified, deleted) anywhere in the repository. |
+| `git add .`   | Stages new & modified files **in the current directory and subdirectories** but does not stage deletions. |
+| `git add -u`  | Stages only modified and deleted files, **not new (untracked) files**. |
+
 ## Other Shell commands
 
 ### pandoc
