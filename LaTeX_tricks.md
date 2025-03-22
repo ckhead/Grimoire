@@ -1,5 +1,29 @@
 
 # LaTeX tricks
+
+## datatool
+To allow LaTeX to read in data created elsewhere
+Put the following in the preamble
+```latex
+% for inputting data lines
+\usepackage{datatool}
+\DTLsetseparator{|}
+\DTLloaddb{dempar}{../../Data/CSV/demand_parameters.csv}
+\usepackage{array}
+```
+The file demand_parameters.csv looks like this:
+```csv
+parname|value
+etabar|4
+```
+**CAUTION**: spaces around the pipe (|) will mess you up.
+
+Then you would use the parameter like this. It is kind of verbose but I think it is functional.
+```latex
+In Table~\ref{tab:ownelas_lit}, the median over all 18 studies is \DTLfetch{dempar}{parname}{etabar}{value}
+```
+where **dempar** is the name you gave when you loaded the data, **parname** is the first column and **etabar** is the row you want and **value** is the column you are extracting data from.
+
 ## todo
 ```latex
 \documentclass[12pt,final]{article}
