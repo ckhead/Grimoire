@@ -13,6 +13,11 @@ DT3[, Vnum := .GRP, by = V_id]
 ```
 
 ## 3. Selecting columns using variable names
+The normal data.table approach is 
+```r
+flights[,.(arr_delay,dep_delay)]
+```
+where .() is short for list(). But often convenient for longer lists to use a character vector instead.
 ```r
 select_cols <- c("arr_delay", "dep_delay")
 flights[, ..select_cols]  # .. prefix goes one step up to get select_cols, like in Unix "cd .."
@@ -21,10 +26,11 @@ This is equivalent to:
 ```r
 flights[, select_cols, with = FALSE]
 ```
-And to augment the vector:
+The advantage of the with= FALSE approach is it allows you to augment the vector:
 ```r
 flights[, c(select_cols, "another_var"), with = FALSE]
 ```
+See also Trick 18.
 
 ## 4. Merge multiple columns into one
 Suppose you have income categories in different columns and only one non-NA per row:
@@ -58,17 +64,17 @@ VET <- CJ(U4 = UP$plant, V4 = VP$plant)
 VET[, c("part", "U_iso_o", "U_owner", "U_plant") := tstrsplit(U4, "_", fixed = TRUE)]
 VET[, c("V_iso_o", "V_owner", "V_plant") := tstrsplit(V4, "_", fixed = TRUE)]
 ```
-
-## 7. Joining two data.tables based on inequalities
-See details on [StackOverflow](https://stackoverflow.com/questions/67612087/matching-yearly-time-points-to-preceding-365-days-of-data-in-r/67625036#67625036).
-
-## 8. More tstrsplit tricks for lat/lon extraction
+## 7. More tstrsplit tricks for lat/lon extraction
 ```r
 DT[, c("lat_str", "lon_str") := tstrsplit(V11, " ")]
 DT[, c("lat_dm", "lat_dir") := tstrsplit(sub('(?<=.{4})', "_", lat_str, perl = TRUE), "_")]
 DT[, c("lon_dm", "lon_dir") := tstrsplit(sub('(?<=.{5})', "_", lon_str, perl = TRUE), "_")]
 ```
-For more on Perl regex, see [here](https://jkorpela.fi/perl/regexp.html).
+ [More on Perl regex](https://jkorpela.fi/perl/regexp.html).
+
+## 8. Joining two data.tables based on inequalities
+[Details on StackOverflow](https://stackoverflow.com/questions/67612087/matching-yearly-time-points-to-preceding-365-days-of-data-in-r/67625036#67625036).
+
 
 ## 9. Multiple operations inside DT[, j]
 Basic plotting:
@@ -90,10 +96,11 @@ Using `cat`:
 ```r
 cat("A", "Z", "\n")
 ```
-Using `writeLines`:
+The  `writeLines` command expects a character vector and it inserts the end of lines automatically. 
 ```r
 writeLines(c("A", "Z"))
 ```
+I use this a lot for saving tex tables. Just add a path to a file.
 
 ## 11. Create a new column as the sum of selected columns
 ```r
@@ -110,7 +117,7 @@ legend("topright", legend = c("FR-DE-IT-GB-BE", "EU15"), pch = c(15, 16), col = 
 attr(y) <- NULL
 DT <- DT[, lapply(.SD, as.vector)]
 ```
-More info: [Attributes in R](https://www.r-bloggers.com/2020/10/attributes-in-r/) and [this package](https://cran.r-project.org/web/packages/labelled/vignettes/intro_labelled.html#:~:text=To%20get%20the%20variable%20label%2C%20simply%20call%20var_label()%20.&text=To%20remove%20a%20variable%20label%2C%20use%20NULL%20.&text=In%20RStudio%2C%20variable%20labels%20will%20be%20displayed%20in%20data%20viewer)
+I think this comes up when converting a stata dta file to a data.table.
 
 ## 14. Using get() and eval() for dynamic evaluation
 ```r
@@ -144,12 +151,18 @@ print(xtable(monte.summary, digits = c(1, 1, 1, 0, 0, 2, 2, 2, 1, 2, 2, 2, 2, 0,
 sink()
 ```
 
-## 18. Extracting column names matching a pattern
+## 18. Extracting or removing column names matching a pattern
+Keeping variables matching a pattern
 ```r
 fcols <- which(colnames(DM) %like% "^f")
 colnames(DM[, ..fcols])
 ```
-
+Removing variables matching a pattern
+```r
+cn <- colnames(VS)
+oldboreg <- cn[cn %like% "^border.*[A-Z]$"]
+VS[, (oldboreg) := NULL]  # note the parentheses around oldboreg
+```
 ## 19. Regular expression tricks: trimming and cutting parentheses
 Trim spaces:
 ```r
@@ -166,12 +179,7 @@ extract_nums <- function(x) as.numeric(gsub("[^0-9]", "", x))
 ```
 To match non-alphanumeric characters, use `[^\a-zA-Z0-9]`.
 
-## 21. Removing variables matching a pattern
-```r
-cn <- colnames(VS)
-oldboreg <- cn[cn %like% "^border.*[A-Z]$"]
-VS[, (oldboreg) := NULL]  # note the parentheses around oldboreg
-```
+## 21.  reserved for future use
 
 ## 22. Additional regex examples and references
 For more gsub() examples, see *Method/Rfiles/falsify_malthus.R*. Also, for extended regular expressions (e.g., punct, digit, alpha, alnum), refer to:
@@ -282,3 +290,4 @@ for (v in hatmon.vars) {
 ## 37. Plots with broken axis using gap.plot
 Refer to the [gap.plot documentation](https://www.rdocumentation.org/packages/plotrix/versions/3.8-4/topics/gap.plot) and [RStudio Pubs example](https://rstudio-pubs-static.s3.amazonaws.com/235467_5abd31ab564a43c9ae0f18cdd07eebe7.html).
 
+[Example code for gap.plot](https://github.com/ckhead/Grimoire/blob/main/Code_examples/R/gap_plot_example.R)
