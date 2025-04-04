@@ -112,8 +112,7 @@ file_combined.bib without erasing its existing content.
 
 ## Executable scripts
 
-Remove latex auxiliary files (email by Keith, 2023.10.2):
-
+Remove latex auxiliary files 
 1. In the Terminal, create the Scripts folder in the root directory
 
 ```
@@ -123,28 +122,31 @@ mkdir -p Scripts
 ```
 2. In your editor, create the following two .sh files (ls is the unix
 list files in directory command, rm is remove file ), each with one
-line.
+line. **aux_ls.sh**
 ```
-aux_ls.sh
-
-find -E . -type f -regex
-'.*.(aux|log|nav|out|snm|toc|vrb|bbl|blg|fdb_latexmk|fls|synctex.gz)'
-
+find -E . -type f -regex '.*.(aux|log|nav|out|snm|toc|vrb|bbl|blg|fdb_latexmk|fls|synctex.gz)'
+```
 aux_rm.sh
-
-find -E . -type f -regex
-'.*.(aux|log|nav|out|snm|toc|vrb|bbl|blg|fdb_latexmk|fls|synctex.gz)'
--exec rm {} +
+```
+find -E . -type f -regex '.*.(aux|log|nav|out|snm|toc|vrb|bbl|blg|fdb_latexmk|fls|synctex.gz)' -exec rm {} +
 ```
 3. In the Terminal, make these files executable
 ```
 cd ~/Scripts
-
-chmod +x aux_ls.sh
-
-chmod +x aux_rm.sh
+chmod +x aux_ls.sh aux_rm.sh
 ```
-4. in the terminal check if you already have a .bash_profile
+4. The next step depends on whether you use bash (older Mac OS) or .zshrc (current Mac OS)
+    
+a. zshrc
+  ```
+  echo 'export PATH="$HOME/Scripts:$PATH"' >> ~/.zshrc
+  ```
+  Now run the that to update the terminal
+```
+source ~/.zshrc
+```
+
+b. Bash: in the terminal check if you already have a .bash_profile or .
 ```
 cd ~/
 
@@ -154,7 +156,7 @@ If not create this file
 ```
 touch .bash_profile
 ```
-5. Back in your editor, open the .bash_profile file in the root
+ Back in your editor, open the .bash_profile file in the root
 directory and add the following
 ```
 export PATH="$PATH:~/Scripts"
@@ -162,4 +164,17 @@ export PATH="$PATH:~/Scripts"
 now type
 ```
 source .bash_profile
+```
+5. Now check if it worked.
+```
+echo $PATH
+```
+ Do you see your Scripts/ folder in the path?
+ If so go to some folder where you have been running LaTeX and type 
+```
+aux_ls.sh.
+```
+You should see the bad files. Type
+```
+aux_rm.sh
 ```
