@@ -53,6 +53,7 @@ brew install pandoc
 
 pandoc -s myfile.docx -t markdown -o myfile.md
 ```
+note: this didn't work very well for me.
 
 ### sips
 
@@ -66,12 +67,13 @@ for file in p*.HEIC; do sips -Z 1024 -s format jpeg "$file" --out
 ```
 2.  crop from top and bottom of a png file
 ```
-for file in C_Americas_*.png; do
-
-sips -c 530 700 "$file" --out "$file"
+for file in C_Americas_*.png; do sips -c 530 700 "$file" --out "$file"; done
 ```
-done
 
+3. Determine height and width of an image file in pixels
+```
+sips -g pixelWidth -g pixelHeight your_image.jpg | awk '/pixel/ {print $2}'
+```
 ### find/grep
 ```
 find . -name "*.bib" -exec grep -il "Author_etal2015" {} +
