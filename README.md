@@ -10,6 +10,6 @@ So now my plan is to convert these files to Markdown and gradually move them up 
   
 So far I have done this for Shell and LaTeX.
 
-Does this README render latex?
+Does this README render latex? $y =\beta x +\epsilon$
 
 $$y_i = x_i^\beta$$
