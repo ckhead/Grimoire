@@ -13,3 +13,9 @@ So far I have done this for Shell and LaTeX.
 Does this README render latex? $y =\beta x +\epsilon$
 
 $$y_i = x_i^\beta$$
+
+The two key things GitHub needs for display-mode LaTeX:
+
+1. A blank line before $$ — without it, GitHub treats it as regular text in the preceding paragraph.
+
+2. No spaces between $$ and the expression (i.e., $$y_i...$$ not $$ y_i... $$) Push that change and it should render properly.
